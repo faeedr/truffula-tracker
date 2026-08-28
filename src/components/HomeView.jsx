@@ -42,8 +42,8 @@ function AnimatedStatNumber({ value, isVisible, decimals = 0, suffix = '' }) {
 }
 
 export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
-  const totalCO2Tons = (totalTrees * CO2_PER_TREE_KG) / 1000;
-  const totalO2Tons = (totalTrees * O2_PER_TREE_KG) / 1000;
+  const totalCO2Kg = totalTrees * CO2_PER_TREE_KG;
+  const totalO2Kg = totalTrees * O2_PER_TREE_KG;
 
   const statsRef = useRef(null);
   const [isStatsVisible, setIsStatsVisible] = useState(false);
@@ -66,15 +66,18 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
   }, []);
 
   return (
-    <div className="flex flex-col gap-12 animate-fadeIn pb-16">
-      <section className="relative rounded-3xl overflow-hidden mt-2 flex items-center justify-start p-6 sm:p-10 md:p-14 lorax-shadow min-h-[560px] md:min-h-[600px] border-2 border-[#ff6584]/20">
-        <div className="absolute inset-0 bg-black/15 z-10"></div>
-        
+    <div className="w-full flex flex-col gap-10 pb-16 animate-fadeIn">
+      <section className="relative overflow-hidden rounded-[2.5rem] p-6 sm:p-12 md:p-16 flex flex-col items-start justify-center min-h-[460px] border-4 border-[#ffdbc7] shadow-xl">
         <div
-          className="absolute inset-0 bg-cover bg-center md:bg-top"
+          className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: 'url(/assets/stitch_hero_bg.jpg)',
-            opacity: 0.95,
+            backgroundImage: "url('/assets/stitch_hero_bg.jpg')",
+          }}
+        ></div>
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to right, rgba(255, 248, 245, 0.95) 0%, rgba(255, 248, 245, 0.75) 45%, rgba(255, 248, 245, 0.1) 100%)',
           }}
         ></div>
 
@@ -161,10 +164,10 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
             </span>
           </div>
           <h3 className="font-['Quicksand'] font-bold text-3xl text-[#311300]">
-            <AnimatedStatNumber value={totalCO2Tons} isVisible={isStatsVisible} decimals={1} suffix=" Tons" />
+            <AnimatedStatNumber value={totalCO2Kg} isVisible={isStatsVisible} suffix=" kg" />
           </h3>
           <p className="font-['Quicksand'] text-xs font-bold text-[#584143] uppercase tracking-wider mt-1">
-            Annual CO2 Offset
+            Annual CO₂ Offset (kg/yr)
           </p>
         </div>
 
@@ -176,10 +179,10 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
             </span>
           </div>
           <h3 className="font-['Quicksand'] font-bold text-3xl text-[#311300]">
-            <AnimatedStatNumber value={totalO2Tons} isVisible={isStatsVisible} decimals={1} suffix=" Tons" />
+            <AnimatedStatNumber value={totalO2Kg} isVisible={isStatsVisible} suffix=" kg" />
           </h3>
           <p className="font-['Quicksand'] text-xs font-bold text-[#584143] uppercase tracking-wider mt-1 mb-2">
-            Oxygen Generated
+            Oxygen Generated (kg/yr)
           </p>
           <div className="inline-block bg-[#ffdbc7] text-[#584143] text-xs font-bold px-2.5 py-1 rounded-full">
             100% Free vs. O'Hare Bottled Air!
