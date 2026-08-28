@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 
-export default function TruffulaGroveCanvas({ treeCount = 0 }) {
+export default function TruffulaGroveCanvas({ treeCount, totalTrees }) {
+  const actualCount = Number(treeCount ?? totalTrees ?? 0);
+
   const truffulaColors = [
     { tuft: '#FF6584', tuftGlow: '#FF8DA6', ring: '#D8385E', name: 'Pink' },
     { tuft: '#FEB72F', tuftGlow: '#FFD166', ring: '#D99A22', name: 'Yellow' },
@@ -13,8 +15,8 @@ export default function TruffulaGroveCanvas({ treeCount = 0 }) {
   ];
 
   const dynamicTrees = useMemo(() => {
-    if (treeCount === 0) return [];
-    if (treeCount === 1) {
+    if (actualCount === 0) return [];
+    if (actualCount === 1) {
       return [
         {
           id: 1,
@@ -31,9 +33,9 @@ export default function TruffulaGroveCanvas({ treeCount = 0 }) {
     }
 
     const trees = [];
-    const step = 84 / (treeCount - 1);
+    const step = 84 / (actualCount - 1);
 
-    for (let i = 0; i < treeCount; i++) {
+    for (let i = 0; i < actualCount; i++) {
       const left = 8 + i * step;
       const height = 120 + ((i * 37) % 65);
       const bottom = 5 + ((i * 5) % 6);
@@ -57,7 +59,7 @@ export default function TruffulaGroveCanvas({ treeCount = 0 }) {
     }
 
     return trees;
-  }, [treeCount]);
+  }, [actualCount]);
 
   return (
     <div className="relative w-full h-80 sm:h-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-[#ffdbc7] bg-gradient-to-b from-[#BAE6FD] via-[#E0F2FE] to-[#FEF3C7] select-none">
@@ -176,11 +178,11 @@ export default function TruffulaGroveCanvas({ treeCount = 0 }) {
       <div className="absolute top-4 left-4 z-30 bg-white/85 backdrop-blur-md px-4 py-2 rounded-2xl border-2 border-[#ffdbc7] shadow-lg flex items-center gap-2">
         <span className="w-3 h-3 rounded-full bg-[#10B981] animate-ping"></span>
         <span className="font-['Quicksand'] font-bold text-xs sm:text-sm text-[#311300]">
-          {treeCount === 0
+          {actualCount === 0
             ? 'The Truffula Valley Awaits Its First Seed...'
-            : treeCount === 1
+            : actualCount === 1
             ? '🌱 1 Truffula Tree Sprouting in the Valley!'
-            : `🌲 ${treeCount} Truffula Trees Swaying in Harmony!`}
+            : `🌲 ${actualCount} Truffula Trees Swaying in Harmony!`}
         </span>
       </div>
     </div>
