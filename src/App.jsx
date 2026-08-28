@@ -9,6 +9,22 @@ import SDGImpactView from './components/SDGImpactView';
 import CertificateModal from './components/CertificateModal';
 import { INITIAL_PROJECTS, BASE_SEED_TREES, CO2_PER_TREE_KG } from './data/mockData';
 
+// One-way cryptographic hashing for secure passcode verification
+async function hashPasscode(str) {
+  try {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+  } catch (e) {
+    return str;
+  }
+}
+
+// Pre-computed fallback hash
+const DEFAULT_AUTH_HASH = 'a57f60714b789ef23932e6047a075027fb471ffcb8884976cf403cfefc5040ee';
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
   const [projects, setProjects] = useState(() => {
@@ -90,9 +106,12 @@ export default function App() {
 
   const handleConfirmReset = async (e) => {
     e.preventDefault();
-    const trimmed = resetPasswordInput.trim().toLowerCase();
-    const targetPassword = (import.meta.env.VITE_ADMIN_PASSWORD || 'unless').trim().toLowerCase();
-    if (trimmed === targetPassword) {
+    const inputHash = await hashPasscode(resetPasswordInput.trim().toLowerCase());
+    
+    const envPass = (import.meta.env.VITE_ADMIN_PASSWORD || '').trim().toLowerCase();
+    const targetHash = envPass ? await hashPasscode(envPass) : DEFAULT_AUTH_HASH;
+
+    if (inputHash === targetHash) {
       setProjects([]);
       try {
         localStorage.removeItem('truffula_projects_v2');
@@ -159,7 +178,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Full-Screen Root Level Celebration Modal */}
       {celebrationProject && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
           <div className="relative bg-[#fff8f5] rounded-3xl border-4 border-[#feb72f] shadow-2xl p-6 sm:p-8 max-w-lg w-full text-center space-y-5">
