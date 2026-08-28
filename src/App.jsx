@@ -91,7 +91,8 @@ export default function App() {
   const handleConfirmReset = async (e) => {
     e.preventDefault();
     const trimmed = resetPasswordInput.trim().toLowerCase();
-    if (trimmed === 'unless') {
+    const targetPassword = (import.meta.env.VITE_ADMIN_PASSWORD || 'unless').trim().toLowerCase();
+    if (trimmed === targetPassword) {
       setProjects([]);
       try {
         localStorage.removeItem('truffula_projects_v2');
