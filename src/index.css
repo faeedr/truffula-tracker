@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Quicksand", "Fredoka", cursive, sans-serif;
+  --font-body: "Be Vietnam Pro", "Nunito", sans-serif;
+
+  --color-primary: #b0284b;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #ff6584;
+  --color-on-primary-container: #6a0024;
+  
+  --color-secondary: #7e5700;
+  --color-secondary-container: #feb72f;
+  --color-secondary-fixed-dim: #ffba3a;
+  --color-on-secondary: #ffffff;
+  
+  --color-tertiary: #006c49;
+  --color-tertiary-container: #00af79;
+  --color-tertiary-fixed-dim: #4edea3;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #003a25;
+
+  --color-surface: #fff8f5;
+  --color-surface-bright: #fff8f5;
+  --color-surface-container: #ffeadf;
+  --color-surface-container-high: #ffe3d3;
+  --color-surface-container-highest: #ffdbc7;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-surface: #311300;
+  --color-on-surface-variant: #584143;
+  --color-outline: #8c7073;
+
+  --color-background: #fff8f5;
+  --color-on-background: #311300;
+}
+
+.lorax-shadow {
+  box-shadow: 0 10px 40px -10px rgba(255, 101, 132, 0.2);
+}
+
+.chunky-btn-shadow {
+  box-shadow: 0 4px 0 0 rgba(106, 0, 36, 0.5);
+  transition: all 0.15s ease-in-out;
+}
+
+.chunky-btn-shadow:active {
+  box-shadow: 0 0 0 0 rgba(106, 0, 36, 0.5);
+  transform: translateY(4px);
+}
+
+.card-pop {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-pop:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(254, 183, 47, 0.3);
+}
+
+@keyframes sway-slow {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3.5deg);
+  }
+}
+
+@keyframes sway-medium {
+  0%, 100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes float-cloud {
+  0% {
+    transform: translateX(-10%);
+  }
+  100% {
+    transform: translateX(110vw);
+  }
+}
+
+.animate-sway-slow {
+  animation: sway-slow 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-sway-medium {
+  animation: sway-medium 3.2s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-float-cloud {
+  animation: float-cloud 45s linear infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #FFF8F5;
+}
+::-webkit-scrollbar-thumb {
+  background: #feb72f;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffba3a;
+}
