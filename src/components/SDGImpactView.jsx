@@ -2,21 +2,18 @@ import React, { useState } from 'react';
 import { CO2_PER_TREE_KG, O2_PER_TREE_KG, OHARE_BOTTLES_SAVED_PER_TREE } from '../data/mockData';
 
 export default function SDGImpactView({ setActiveTab }) {
-  const [sliderTrees, setSliderTrees] = useState(50);
+  const [sliderTrees, setSliderTrees] = useState(25);
 
   const co2Absorbed = (sliderTrees * CO2_PER_TREE_KG).toLocaleString();
   const o2Produced = (sliderTrees * O2_PER_TREE_KG).toLocaleString();
   const bottlesAvoided = (sliderTrees * OHARE_BOTTLES_SAVED_PER_TREE).toLocaleString();
   const peopleOxygen = sliderTrees * 2;
 
-  // Exact 0 to 100% calculation
-  const sliderPercent = ((sliderTrees - 1) / (100 - 1)) * 100;
+  const sliderPercent = ((sliderTrees - 1) / (50 - 1)) * 100;
 
   return (
     <div className="w-full flex flex-col gap-10 pb-16 animate-fadeIn">
-      {/* Hero Section */}
       <section className="w-full flex flex-col lg:flex-row items-center justify-between gap-8 pt-4">
-        {/* Left Text */}
         <div className="w-full lg:w-1/2 text-left space-y-4">
           <h1 className="font-['Quicksand'] font-bold text-3xl sm:text-4xl md:text-5xl text-[#311300] leading-tight">
             <span className="text-[#ff6584]">SDG 13: Climate Action</span> &amp;<br />
@@ -27,7 +24,6 @@ export default function SDGImpactView({ setActiveTab }) {
           </p>
         </div>
 
-        {/* Right Hero Image (The Lorax with UN SDG Wheel) */}
         <div className="w-full lg:w-1/2 flex justify-center items-center">
           <div className="relative p-4 sm:p-6 bg-white rounded-3xl border-2 border-[#ffdbc7] shadow-xl max-w-md w-full flex items-center justify-center">
             <img
@@ -39,7 +35,6 @@ export default function SDGImpactView({ setActiveTab }) {
         </div>
       </section>
 
-      {/* Narrative Section answering "How 1971 warning became sustainability mission" */}
       <section className="bg-white rounded-3xl p-6 sm:p-10 border-2 border-[#ffdbc7] shadow-md space-y-8">
         <div className="text-center max-w-3xl mx-auto space-y-2">
           <div className="inline-block bg-[#006c49]/10 text-[#006c49] font-['Quicksand'] font-bold text-xs px-4 py-1 rounded-full uppercase tracking-wider">
@@ -53,9 +48,7 @@ export default function SDGImpactView({ setActiveTab }) {
           </p>
         </div>
 
-        {/* 3-Step Milestone Journey */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Step 1 */}
           <div className="bg-[#fff8f5] p-6 rounded-3xl border-2 border-[#dfbfc2] flex flex-col justify-between space-y-3 relative overflow-hidden">
             <div className="space-y-2">
               <span className="text-xs font-bold font-['Quicksand'] text-[#b0284b] bg-[#ffdbc7] px-3 py-1 rounded-full">
@@ -73,7 +66,6 @@ export default function SDGImpactView({ setActiveTab }) {
             </div>
           </div>
 
-          {/* Step 2 */}
           <div className="bg-[#fff8f5] p-6 rounded-3xl border-2 border-[#dfbfc2] flex flex-col justify-between space-y-3 relative overflow-hidden">
             <div className="space-y-2">
               <span className="text-xs font-bold font-['Quicksand'] text-[#7e5700] bg-[#fed7aa] px-3 py-1 rounded-full">
@@ -91,7 +83,6 @@ export default function SDGImpactView({ setActiveTab }) {
             </div>
           </div>
 
-          {/* Step 3 */}
           <div className="bg-[#fff8f5] p-6 rounded-3xl border-2 border-[#006c49]/30 flex flex-col justify-between space-y-3 relative overflow-hidden">
             <div className="space-y-2">
               <span className="text-xs font-bold font-['Quicksand'] text-[#006c49] bg-[#bbf7d0] px-3 py-1 rounded-full">
@@ -111,7 +102,6 @@ export default function SDGImpactView({ setActiveTab }) {
         </div>
       </section>
 
-      {/* Impact Simulator */}
       <section className="w-full">
         <div className="bg-white rounded-3xl p-6 sm:p-10 md:p-12 shadow-[0_10px_40px_-10px_rgba(255,101,132,0.15)] flex flex-col gap-8 w-full border-2 border-[#ffdbc7]">
           <div className="text-center space-y-2">
@@ -127,35 +117,30 @@ export default function SDGImpactView({ setActiveTab }) {
           <div className="flex flex-col gap-4 max-w-3xl mx-auto w-full">
             <div className="flex justify-between items-end">
               <label className="font-['Quicksand'] font-bold text-sm sm:text-base text-[#311300]">
-                Number of Trees to Plant
+                Number of Trees to Plant (1 – 50)
               </label>
               <span className="font-['Quicksand'] font-bold text-2xl text-[#ff6584]">
                 {sliderTrees} {sliderTrees === 1 ? 'Tree' : 'Trees'}
               </span>
             </div>
 
-            {/* Hardware-Synced Responsive Slider Track */}
             <div className="relative w-full h-8 flex items-center">
-              {/* Background Track Bar */}
               <div className="absolute w-full h-4 bg-[#ffdbc7] rounded-full overflow-hidden pointer-events-none">
-                {/* Instant Gradient Fill */}
                 <div
                   className="h-full bg-gradient-to-r from-[#00af79] to-[#006c49] rounded-full"
                   style={{ width: `${sliderPercent}%` }}
                 ></div>
               </div>
 
-              {/* Native Range Input with high responsiveness */}
               <input
                 type="range"
                 min="1"
-                max="100"
+                max="50"
                 value={sliderTrees}
                 onChange={(e) => setSliderTrees(Number(e.target.value))}
                 className="w-full h-6 opacity-0 z-20 cursor-pointer"
               />
 
-              {/* Centered Leaf Thumb */}
               <div
                 className="absolute w-8 h-8 sm:w-9 sm:h-9 bg-white border-4 border-[#006c49] rounded-full shadow-md flex items-center justify-center pointer-events-none z-10"
                 style={{
@@ -172,9 +157,7 @@ export default function SDGImpactView({ setActiveTab }) {
             </div>
           </div>
 
-          {/* Metrics Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
-            {/* Metric 1 */}
             <div className="bg-[#fff8f5] rounded-3xl p-6 flex flex-col items-center text-center gap-2 border-2 border-[#ffdbc7] hover:-translate-y-1 transition-transform shadow-sm">
               <div className="w-16 h-16 rounded-full bg-[#ff6584]/20 flex items-center justify-center text-[#b0284b] mb-1">
                 <span className="material-symbols-outlined text-3xl">co2</span>
@@ -190,7 +173,6 @@ export default function SDGImpactView({ setActiveTab }) {
               </p>
             </div>
 
-            {/* Metric 2 */}
             <div className="bg-[#fff8f5] rounded-3xl p-6 flex flex-col items-center text-center gap-2 border-2 border-[#ffdbc7] hover:-translate-y-1 transition-transform shadow-sm">
               <div className="w-16 h-16 rounded-full bg-[#00af79]/20 flex items-center justify-center text-[#006c49] mb-1">
                 <span className="material-symbols-outlined text-3xl">air</span>
@@ -206,7 +188,6 @@ export default function SDGImpactView({ setActiveTab }) {
               </p>
             </div>
 
-            {/* Metric 3 */}
             <div className="bg-[#fff8f5] rounded-3xl p-6 flex flex-col items-center text-center gap-2 border-2 border-[#ffdbc7] hover:-translate-y-1 transition-transform shadow-sm">
               <div className="w-16 h-16 rounded-full bg-[#feb72f]/25 flex items-center justify-center text-[#7e5700] mb-1">
                 <span className="material-symbols-outlined text-3xl">water_bottle</span>
@@ -225,7 +206,6 @@ export default function SDGImpactView({ setActiveTab }) {
         </div>
       </section>
 
-      {/* Allegory vs Reality Section */}
       <section className="w-full flex flex-col gap-6">
         <div className="text-center">
           <h2 className="font-['Quicksand'] font-bold text-3xl text-[#311300]">
@@ -234,7 +214,6 @@ export default function SDGImpactView({ setActiveTab }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Card A: The Warning */}
           <div className="bg-white rounded-3xl overflow-hidden border-2 border-red-200/80 shadow-md group flex flex-col justify-between">
             <div>
               <div className="relative h-60 w-full overflow-hidden bg-slate-950">
@@ -263,7 +242,6 @@ export default function SDGImpactView({ setActiveTab }) {
             </div>
           </div>
 
-          {/* Card B: The Action */}
           <div className="bg-white rounded-3xl overflow-hidden border-2 border-emerald-200/80 shadow-md group flex flex-col justify-between">
             <div>
               <div className="relative h-60 w-full overflow-hidden bg-slate-950">
@@ -294,10 +272,8 @@ export default function SDGImpactView({ setActiveTab }) {
         </div>
       </section>
 
-      {/* CTA Banner */}
       <section className="w-full">
         <div className="bg-[#ff6584]/15 rounded-3xl p-8 sm:p-12 md:p-14 text-center border-2 border-[#ff6584]/30 flex flex-col items-center gap-6 relative overflow-hidden shadow-lg">
-          {/* Decorative blur elements */}
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#feb72f]/20 rounded-full blur-3xl pointer-events-none"></div>
           <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#00af79]/20 rounded-full blur-3xl pointer-events-none"></div>
 

@@ -1,19 +1,75 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CO2_PER_TREE_KG, O2_PER_TREE_KG } from '../data/mockData';
 import TruffulaGroveCanvas from './TruffulaGroveCanvas';
 
+function AnimatedStatNumber({ value, isVisible, decimals = 0, suffix = '' }) {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!isVisible) {
+      setCurrent(0);
+      return;
+    }
+
+    let startTime = null;
+    const target = Number(value) || 0;
+    const duration = 1200;
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const nextVal = easeProgress * target;
+      
+      setCurrent(nextVal);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setCurrent(target);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [value, isVisible]);
+
+  return (
+    <span>
+      {decimals > 0 ? current.toFixed(decimals) : Math.round(current).toLocaleString()}
+      {suffix}
+    </span>
+  );
+}
+
 export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
-  const totalCO2Tons = ((totalTrees * CO2_PER_TREE_KG) / 1000).toFixed(1);
-  const totalO2Tons = ((totalTrees * O2_PER_TREE_KG) / 1000).toFixed(1);
+  const totalCO2Tons = (totalTrees * CO2_PER_TREE_KG) / 1000;
+  const totalO2Tons = (totalTrees * O2_PER_TREE_KG) / 1000;
+
+  const statsRef = useRef(null);
+  const [isStatsVisible, setIsStatsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsStatsVisible(true);
+        }
+      },
+      { threshold: 0.25 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="flex flex-col gap-12 animate-fadeIn pb-16">
-      {/* Hero Section (Matching Stitch 1:1) */}
       <section className="relative rounded-3xl overflow-hidden mt-2 flex items-center justify-start p-6 sm:p-10 md:p-14 lorax-shadow min-h-[560px] md:min-h-[600px] border-2 border-[#ff6584]/20">
-        {/* Subtle Darkening Overlay */}
         <div className="absolute inset-0 bg-black/15 z-10"></div>
         
-        {/* Hero Background Image from Stitch */}
         <div
           className="absolute inset-0 bg-cover bg-center md:bg-top"
           style={{
@@ -22,9 +78,8 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
           }}
         ></div>
 
-        {/* Floating Glassmorphic Content Card (Left Side) */}
         <div className="relative z-20 w-full max-w-5xl flex flex-col md:flex-row items-center gap-12">
-          <div className="flex-1 max-w-xl text-left bg-[#fff8f5]/40 backdrop-blur-xl p-8 md:p-12 rounded-[2rem] border-4 border-[#ffdbc7] shadow-2xl">
+          <div className="flex-1 max-w-xl text-left bg-[#fff8f5]/40 backdrop-blur-xl p-8 md:p-12 rounded-[2rem] border-4 border-[#ffdbc7] shadow-2xl card-pop">
             <h1 className="font-['Quicksand'] font-bold text-3xl sm:text-4xl md:text-5xl text-[#311300] mb-6 drop-shadow-sm leading-tight">
               Speak for the Trees. Take Action for Climate.
             </h1>
@@ -34,7 +89,7 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
             <div className="flex flex-col sm:flex-row gap-4 justify-start">
               <button
                 onClick={() => setActiveTab('submit')}
-                className="bg-[#ff6584] text-[#6a0024] font-['Quicksand'] font-bold text-base px-8 py-4 rounded-full flex items-center justify-center gap-2 hover:brightness-110 transition-all chunky-btn-shadow cursor-pointer"
+                className="bg-[#ff6584] text-[#6a0024] font-['Quicksand'] font-bold text-base px-8 py-4 rounded-full flex items-center justify-center gap-2 hover:brightness-110 transition-all chunky-btn-shadow cursor-pointer hover:scale-105 active:scale-95"
               >
                 <span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>
                   potted_plant
@@ -43,20 +98,19 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
               </button>
 
               <button
-                onClick={() => setActiveTab('sdg')}
-                className="border-2 border-[#b0284b] text-[#b0284b] font-['Quicksand'] font-bold text-base px-8 py-4 rounded-full hover:bg-[#b0284b] hover:text-white transition-all bg-[#fff8f5]/50 backdrop-blur-sm cursor-pointer"
+                onClick={() => setActiveTab('community')}
+                className="border-2 border-[#b0284b] text-[#b0284b] font-['Quicksand'] font-bold text-base px-8 py-4 rounded-full hover:bg-[#b0284b] hover:text-white transition-all bg-[#fff8f5]/50 backdrop-blur-sm cursor-pointer hover:scale-105 active:scale-95 flex items-center justify-center gap-1.5"
               >
-                View Forest Impact
+                <span className="material-symbols-outlined text-lg">forest</span>
+                <span>View Community Forest</span>
               </button>
             </div>
           </div>
 
-          {/* Right side is open so the Lorax in the background image shines through */}
           <div className="hidden md:block flex-1"></div>
         </div>
       </section>
 
-      {/* Dynamic Animated Truffula Grove Component */}
       <section className="space-y-3">
         <div className="px-2">
           <h2 className="font-['Quicksand'] font-bold text-2xl text-[#311300]">
@@ -69,55 +123,50 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
         <TruffulaGroveCanvas totalTrees={totalTrees} />
       </section>
 
-      {/* Stats Section (Directly from Stitch) */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Card 1 */}
-        <div className="bg-white p-6 rounded-3xl lorax-shadow card-pop border-b-4 border-[#006c49]">
+      <section ref={statsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white p-6 rounded-3xl lorax-shadow card-pop border-b-4 border-[#006c49] border-t border-x border-[#ffdbc7]/50">
           <div className="w-12 h-12 bg-[#006c49]/20 text-[#006c49] rounded-2xl flex items-center justify-center mb-4">
             <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: '"FILL" 1' }}>
               forest
             </span>
           </div>
           <h3 className="font-['Quicksand'] font-bold text-3xl text-[#311300]">
-            {totalTrees.toLocaleString()}
+            <AnimatedStatNumber value={totalTrees} isVisible={isStatsVisible} />
           </h3>
           <p className="font-['Quicksand'] text-xs font-bold text-[#584143] uppercase tracking-wider mt-1">
             Total Trees Planted
           </p>
         </div>
 
-        {/* Card 2 */}
-        <div className="bg-white p-6 rounded-3xl lorax-shadow card-pop border-b-4 border-[#feb72f]">
+        <div className="bg-white p-6 rounded-3xl lorax-shadow card-pop border-b-4 border-[#feb72f] border-t border-x border-[#ffdbc7]/50">
           <div className="w-12 h-12 bg-[#feb72f]/20 text-[#7e5700] rounded-2xl flex items-center justify-center mb-4">
             <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: '"FILL" 1' }}>
               group
             </span>
           </div>
           <h3 className="font-['Quicksand'] font-bold text-3xl text-[#311300]">
-            {totalGroups}
+            <AnimatedStatNumber value={totalGroups} isVisible={isStatsVisible} />
           </h3>
           <p className="font-['Quicksand'] text-xs font-bold text-[#584143] uppercase tracking-wider mt-1">
             Groups contributed
           </p>
         </div>
 
-        {/* Card 3 */}
-        <div className="bg-white p-6 rounded-3xl lorax-shadow card-pop border-b-4 border-[#4edea3]">
+        <div className="bg-white p-6 rounded-3xl lorax-shadow card-pop border-b-4 border-[#4edea3] border-t border-x border-[#ffdbc7]/50">
           <div className="w-12 h-12 bg-[#4edea3]/20 text-[#003a25] rounded-2xl flex items-center justify-center mb-4">
             <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: '"FILL" 1' }}>
               cloud_sync
             </span>
           </div>
           <h3 className="font-['Quicksand'] font-bold text-3xl text-[#311300]">
-            {totalCO2Tons} Tons
+            <AnimatedStatNumber value={totalCO2Tons} isVisible={isStatsVisible} decimals={1} suffix=" Tons" />
           </h3>
           <p className="font-['Quicksand'] text-xs font-bold text-[#584143] uppercase tracking-wider mt-1">
             Annual CO2 Offset
           </p>
         </div>
 
-        {/* Card 4 */}
-        <div className="bg-white p-6 rounded-3xl lorax-shadow card-pop border-b-4 border-[#ff6584] relative overflow-hidden">
+        <div className="bg-white p-6 rounded-3xl lorax-shadow card-pop border-b-4 border-[#ff6584] border-t border-x border-[#ffdbc7]/50 relative overflow-hidden">
           <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#ff6584]/10 rounded-full blur-xl"></div>
           <div className="w-12 h-12 bg-[#ff6584]/20 text-[#b0284b] rounded-2xl flex items-center justify-center mb-4">
             <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: '"FILL" 1' }}>
@@ -125,7 +174,7 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
             </span>
           </div>
           <h3 className="font-['Quicksand'] font-bold text-3xl text-[#311300]">
-            {totalO2Tons} Tons
+            <AnimatedStatNumber value={totalO2Tons} isVisible={isStatsVisible} decimals={1} suffix=" Tons" />
           </h3>
           <p className="font-['Quicksand'] text-xs font-bold text-[#584143] uppercase tracking-wider mt-1 mb-2">
             Oxygen Generated
@@ -136,20 +185,18 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
         </div>
       </section>
 
-      {/* SDG Section (Directly from Stitch) */}
       <section className="flex flex-col gap-8">
         <h2 className="font-['Quicksand'] font-bold text-3xl sm:text-4xl text-center text-[#ff6584]">
           Why SDG 13 Matters
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Left Card: The Lesson of Thneedville (With Ted holding the seed) */}
-          <div className="bg-white rounded-3xl overflow-hidden lorax-shadow group flex flex-col justify-between border-2 border-[#ffdbc7]">
+          <div className="bg-white rounded-3xl overflow-hidden lorax-shadow group flex flex-col justify-between border-2 border-[#ffdbc7] card-pop">
             <div>
               <div className="h-64 relative overflow-hidden bg-slate-900">
                 <img
                   src="/assets/ted_holding_seed.png"
-                  alt="Ted holding the Last Truffula Seed"
+                  alt="The Last Truffula Seed"
                   className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
@@ -174,10 +221,9 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
             </div>
           </div>
 
-          {/* Right Card: Our Real-World Solution */}
-          <div className="bg-[#006c49]/10 rounded-3xl overflow-hidden lorax-shadow flex flex-col justify-center p-6 sm:p-8 border-l-8 border-[#006c49] relative">
+          <div className="bg-[#006c49]/10 rounded-3xl overflow-hidden lorax-shadow flex flex-col justify-center p-6 sm:p-8 border-l-8 border-[#006c49] border-2 border-[#006c49]/20 relative card-pop">
             <span
-              className="material-symbols-outlined text-9xl absolute -bottom-10 -right-10 text-[#006c49]/10 rotate-12 pointer-events-none"
+              className="material-symbols-outlined text-9xl absolute -bottom-10 -right-10 text-[#006c49]/10 rotate-12 pointer-events-none transition-transform group-hover:rotate-45 duration-700"
               style={{ fontVariationSettings: '"FILL" 1' }}
             >
               public

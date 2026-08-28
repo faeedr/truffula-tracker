@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { CO2_PER_TREE_KG } from '../data/mockData';
 
-// Helper: Compress/resize image to prevent memory & localStorage quota limits
 const compressImage = (file) => {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -39,17 +38,15 @@ const compressImage = (file) => {
 };
 
 export default function SubmitView({ onAddProject, setActiveTab, onOpenCertificate }) {
-  // Story Unlock State
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isAnimatingSeed, setIsAnimatingSeed] = useState(false);
 
-  // Form Fields
   const [groupName, setGroupName] = useState('');
   const [memberInput, setMemberInput] = useState('');
-  const [membersList, setMembersList] = useState([]); // Empty starter list
+  const [membersList, setMembersList] = useState([]);
   const [location, setLocation] = useState('');
-  const [treeCount, setTreeCount] = useState(1); // Editable number, default 1
-  const [photosList, setPhotosList] = useState([]); // Multiple photo evidence
+  const [treeCount, setTreeCount] = useState(1);
+  const [photosList, setPhotosList] = useState([]);
   const [photoError, setPhotoError] = useState(false);
   const [memberError, setMemberError] = useState(false);
   const [submittedProject, setSubmittedProject] = useState(null);
@@ -57,7 +54,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
 
   const fileInputRef = useRef(null);
 
-  // Reset form completely
   const resetFormState = () => {
     setGroupName('');
     setMemberInput('');
@@ -71,7 +67,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
     setIsAnimatingSeed(false);
   };
 
-  // Handle Team Member Tags
   const handleAddMember = () => {
     if (memberInput.trim() && !membersList.includes(memberInput.trim())) {
       setMembersList([...membersList, memberInput.trim()]);
@@ -88,7 +83,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
     }
   };
 
-  // Handle Multiple Photo Uploads with Compression & Live Previews
   const handlePhotoUpload = async (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
@@ -98,7 +92,7 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
           const compressed = await compressImage(file);
           setPhotosList((prev) => [...prev, compressed]);
         } catch (err) {
-          console.error('Error compressing image', err);
+          console.error(err);
         }
       }
     }
@@ -108,7 +102,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
     setPhotosList(photosList.filter((_, idx) => idx !== indexToRemove));
   };
 
-  // Stepper & Direct Typing controls
   const incrementTrees = () => setTreeCount((prev) => Number(prev || 0) + 1);
   const decrementTrees = () => setTreeCount((prev) => Math.max(1, Number(prev || 1) - 1));
   const handleTreeCountChange = (e) => {
@@ -120,13 +113,11 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
     }
   };
 
-  // Trigger Story Unlock
   const handleTriggerStory = () => {
     if (isUnlocked || isAnimatingSeed) return;
 
     setIsAnimatingSeed(true);
 
-    // After animation duration, unlock form
     setTimeout(() => {
       setIsUnlocked(true);
       setIsAnimatingSeed(false);
@@ -140,7 +131,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
     }, 1800);
   };
 
-  // Handle Submit Form
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -165,15 +155,13 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
       photoUrl: photosList[0] || '/assets/marshmallow_wonder.png',
       allPhotos: photosList,
       date: new Date().toISOString().split('T')[0],
-      notes: 'Planted with genuine care to speak for the trees and restore clean air!',
+      notes: 'Planted with care to speak for the trees and restore clean air.',
       verified: true,
     };
 
     onAddProject(newProject);
     setSubmittedProject(newProject);
     setShowSuccessModal(true);
-
-    // Reset the underlying form state so user cannot accidentally resubmit
     resetFormState();
 
     confetti({
@@ -184,7 +172,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
     });
   };
 
-  // Dismiss Modal & Navigate Home
   const handleDismissModal = () => {
     setShowSuccessModal(false);
     setActiveTab('home');
@@ -193,12 +180,10 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
   return (
     <div className="w-full max-w-6xl mx-auto animate-fadeIn">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        {/* Left: Story Box (Once-ler Lerkim) */}
         <div className="lg:col-span-5 flex flex-col">
           <div className="bg-[#4A2E18] rounded-[2.5rem] p-6 sm:p-8 flex flex-col items-center justify-between text-center shadow-xl relative overflow-hidden group h-full min-h-[580px] lg:max-h-[640px] border-4 border-[#3A2211]">
             <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
 
-            {/* Seed Drop Element */}
             {isAnimatingSeed && (
               <div className="absolute left-1/2 -translate-x-1/2 z-30 flex flex-col items-center justify-center text-[#ffba3a] drop-shadow-[0_0_20px_rgba(255,186,58,0.9)] animate-bounce-subtle">
                 <span className="material-symbols-outlined text-6xl" style={{ fontVariationSettings: '"FILL" 1' }}>
@@ -210,7 +195,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
               </div>
             )}
 
-            {/* Once-ler Window Image */}
             <div className="w-full relative z-10 my-auto max-w-[340px]">
               <img
                 src="/assets/once_ler_window.jpg"
@@ -221,12 +205,10 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
               />
             </div>
 
-            {/* Quote Banner */}
             <p className="font-['Quicksand'] text-lg sm:text-xl text-[#feb72f] my-auto relative z-10 italic drop-shadow-md leading-snug px-2">
               "Unless someone like you cares a whole awful lot, nothing is going to get better. It's not."
             </p>
 
-            {/* I CARE Button */}
             <div className="relative z-10 mt-auto pt-2">
               <button
                 onClick={handleTriggerStory}
@@ -246,9 +228,7 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
           </div>
         </div>
 
-        {/* Right: Form Card */}
         <div className="lg:col-span-7 relative flex flex-col">
-          {/* Overlay when locked */}
           {!isUnlocked && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/70 backdrop-blur-md rounded-[2.5rem] transition-all duration-700">
               <div className="text-center p-6 sm:p-8 bg-[#ffe3d3]/95 rounded-3xl border-2 border-[#dfbfc2] shadow-2xl max-w-xs sm:max-w-sm mx-4 transform transition-transform duration-500 hover:scale-105">
@@ -268,13 +248,11 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
             </div>
           )}
 
-          {/* Actual Form Container */}
           <div
             className={`bg-white/95 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-7 shadow-[0_12px_40px_rgba(176,40,75,0.08)] relative overflow-hidden h-full min-h-[580px] lg:max-h-[640px] flex flex-col justify-between border-2 border-[#ffdbc7] transition-all duration-700 ${
               !isUnlocked ? 'opacity-40 blur-sm pointer-events-none' : 'opacity-100 blur-none'
             }`}
           >
-            {/* Decorative background circle */}
             <div className="absolute top-0 right-0 w-48 h-48 bg-[#ffb2bc]/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
 
             <div>
@@ -287,7 +265,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-3 flex-1 flex flex-col justify-between overflow-y-auto pr-1">
-              {/* Group Name */}
               <div>
                 <label className="block font-['Quicksand'] font-bold text-xs text-[#311300] mb-1">
                   Group / School Name <span className="text-rose-500">*</span>
@@ -302,7 +279,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
                 />
               </div>
 
-              {/* Team Members */}
               <div>
                 <label className="block font-['Quicksand'] font-bold text-xs text-[#311300] mb-1">
                   Team Members <span className="text-rose-500">*</span>
@@ -353,7 +329,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
                 )}
               </div>
 
-              {/* Planting Location */}
               <div>
                 <label className="block font-['Quicksand'] font-bold text-xs text-[#311300] mb-1">
                   Planting Location <span className="text-rose-500">*</span>
@@ -376,7 +351,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
                 </div>
               </div>
 
-              {/* Editable Tree Count Stepper */}
               <div className="bg-[#ffeadf] rounded-2xl p-2.5 sm:p-3 border border-[#dfbfc2] flex items-center justify-between">
                 <div>
                   <label className="block font-['Quicksand'] font-bold text-xs text-[#311300]">
@@ -417,7 +391,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
                 </div>
               </div>
 
-              {/* Multiple Photo Evidence Upload */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block font-['Quicksand'] font-bold text-xs text-[#311300]">
@@ -434,7 +407,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
                   )}
                 </div>
 
-                {/* Dropzone */}
                 {photosList.length === 0 ? (
                   <div
                     onClick={() => fileInputRef.current?.click()}
@@ -456,7 +428,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
                     </div>
                   </div>
                 ) : (
-                  /* Multiple Photos Thumbnail Grid */
                   <div className="flex gap-2 overflow-x-auto py-1 max-w-full">
                     {photosList.map((photo, index) => (
                       <div
@@ -510,7 +481,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
                 )}
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full bg-[#10B981] hover:bg-[#059669] text-white font-['Quicksand'] font-bold py-3 rounded-full border-b-4 border-[#059669] active:border-b-0 active:translate-y-1 transition-colors shadow-md flex justify-center items-center gap-2 text-sm mt-1 cursor-pointer"
@@ -525,11 +495,9 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
         </div>
       </div>
 
-      {/* Success Celebration Modal */}
       {showSuccessModal && submittedProject && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
           <div className="relative bg-[#fff8f5] rounded-3xl border-4 border-[#feb72f] shadow-2xl p-6 sm:p-8 max-w-lg w-full text-center space-y-5">
-            {/* Close Button */}
             <button
               onClick={handleDismissModal}
               className="absolute top-4 right-4 p-2 text-[#8c7073] hover:text-[#311300] rounded-full hover:bg-[#ffe3d3] transition-colors cursor-pointer"
@@ -538,7 +506,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
               <span className="material-symbols-outlined">close</span>
             </button>
 
-            {/* Lorax Mascot Cutout */}
             <div className="relative w-28 h-28 mx-auto">
               <div className="absolute inset-0 bg-[#feb72f]/40 rounded-full blur-xl animate-pulse"></div>
               <img
@@ -548,7 +515,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
               />
             </div>
 
-            {/* Celebration Text */}
             <div className="space-y-1">
               <span className="bg-[#feb72f]/20 text-[#7e5700] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-[#feb72f]">
                 🌱 The Guardian of the Forest Thanks You!
@@ -563,7 +529,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
               </p>
             </div>
 
-            {/* Metric Snapshot */}
             <div className="bg-[#ffeadf] rounded-2xl p-3.5 border border-[#dfbfc2] grid grid-cols-2 gap-3 text-left">
               <div>
                 <p className="text-[10px] font-bold text-[#7e5700] uppercase">CO₂ Sequestration</p>
@@ -579,7 +544,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="space-y-2 pt-1">
               <button
                 onClick={() => {

@@ -15,7 +15,7 @@ export default function App() {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        console.error('Failed to parse saved projects', e);
+        console.error(e);
       }
     }
     return INITIAL_PROJECTS;
@@ -23,21 +23,18 @@ export default function App() {
 
   const [activeCertificate, setActiveCertificate] = useState(null);
 
-  // Automatically scroll to top whenever changing tabs/pages
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [activeTab]);
 
-  // Safe localStorage syncing with try-catch
   useEffect(() => {
     try {
       localStorage.setItem('truffula_projects_v2', JSON.stringify(projects));
     } catch (e) {
-      console.warn('LocalStorage quota limit reached; maintaining in memory', e);
+      console.warn(e);
     }
   }, [projects]);
 
-  // Calculate live global tree count
   const submittedTrees = projects.reduce((acc, p) => acc + (Number(p.treeCount) || 0), 0);
   const totalTrees = BASE_SEED_TREES + submittedTrees;
   const totalGroups = projects.length;
@@ -57,8 +54,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col justify-between bg-[#fff8f5] text-[#311300] font-['Be_Vietnam_Pro',sans-serif] selection:bg-[#ff6584] selection:text-[#6a0024]">
-      {/* Top Sticky Floating Navbar */}
-      <div className="w-full px-4 sm:px-8 pt-3">
+      <div className="w-full px-4 sm:px-8 pt-3 relative z-40">
         <Navbar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -66,8 +62,7 @@ export default function App() {
         />
       </div>
 
-      {/* Main Page Container */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-8 flex flex-col justify-center py-2">
+      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-8 flex flex-col justify-center py-2 relative z-10">
         {activeTab === 'home' && (
           <HomeView
             setActiveTab={setActiveTab}
@@ -101,7 +96,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Certificate Modal */}
       {activeCertificate && (
         <CertificateModal
           project={activeCertificate}
@@ -109,8 +103,7 @@ export default function App() {
         />
       )}
 
-      {/* Footer from Stitch - Fitted */}
-      <footer className="bg-[#ffe3d3] w-full rounded-t-[2.5rem] mt-8 py-5 px-6 border-t-2 border-[#006c49]/20 flex flex-col items-center text-center gap-1.5 shadow-inner relative z-10">
+      <footer className="bg-[#ffe3d3] w-full rounded-t-[2.5rem] mt-8 py-5 px-6 border-t-2 border-[#006c49]/20 flex flex-col items-center text-center gap-1.5 shadow-inner relative z-20">
         <div className="font-['Quicksand'] font-bold text-base sm:text-lg text-[#006c49] max-w-2xl leading-snug">
           "UNLESS someone like you cares a whole awful lot, nothing is going to get better. It's not."
         </div>
@@ -131,7 +124,6 @@ export default function App() {
             <button
               onClick={handleResetData}
               className="text-amber-800 hover:text-rose-600 underline font-semibold transition-colors cursor-pointer"
-              title="Reset all demo projects to 0 for a fresh video recording"
             >
               Reset Demo
             </button>

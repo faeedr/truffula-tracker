@@ -1,21 +1,19 @@
 import React, { useMemo } from 'react';
 
-// Generates dynamic trees based on total count
 export default function TruffulaGroveCanvas({ totalTrees }) {
   const treeCount = Math.max(0, totalTrees);
 
   const truffulaColors = [
-    { tuft: '#FF6584', tuftGlow: '#FFA0B4', ring: '#D83A60' }, // Classic Pink
-    { tuft: '#FEB72F', tuftGlow: '#FED47D', ring: '#D99106' }, // Sunny Yellow
-    { tuft: '#A855F7', tuftGlow: '#C084FC', ring: '#7E22CE' }, // Purple
-    { tuft: '#38BDF8', tuftGlow: '#7DD3FC', ring: '#0284C7' }, // Sky Blue
-    { tuft: '#FB7185', tuftGlow: '#FDA4AF', ring: '#E11D48' }, // Coral
-    { tuft: '#4ADE80', tuftGlow: '#86EFAC', ring: '#16A34A' }, // Lime Green
-    { tuft: '#F472B6', tuftGlow: '#F9A8D4', ring: '#DB2777' }, // Bright Pink
-    { tuft: '#FBBF24', tuftGlow: '#FDE68A', ring: '#D97706' }, // Gold
+    { tuft: '#FF6584', tuftGlow: '#FFA0B4', ring: '#D83A60' },
+    { tuft: '#FEB72F', tuftGlow: '#FED47D', ring: '#D99106' },
+    { tuft: '#A855F7', tuftGlow: '#C084FC', ring: '#7E22CE' },
+    { tuft: '#38BDF8', tuftGlow: '#7DD3FC', ring: '#0284C7' },
+    { tuft: '#FB7185', tuftGlow: '#FDA4AF', ring: '#E11D48' },
+    { tuft: '#4ADE80', tuftGlow: '#86EFAC', ring: '#16A34A' },
+    { tuft: '#F472B6', tuftGlow: '#F9A8D4', ring: '#DB2777' },
+    { tuft: '#FBBF24', tuftGlow: '#FDE68A', ring: '#D97706' },
   ];
 
-  // Distribute trees evenly
   const dynamicTrees = useMemo(() => {
     if (treeCount === 0) return [];
     if (treeCount === 1) {
@@ -65,12 +63,10 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
 
   return (
     <div className="relative w-full h-80 sm:h-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-[#ffdbc7] bg-gradient-to-b from-[#BAE6FD] via-[#E0F2FE] to-[#FEF3C7] select-none">
-      {/* Sun and Sky Clouds */}
       <div className="absolute top-4 right-12 w-20 h-20 rounded-full bg-[#FEF08A] opacity-90 blur-xs shadow-[0_0_40px_#FDE047] animate-pulse"></div>
       <div className="absolute top-8 left-16 w-32 h-10 bg-white/70 rounded-full blur-sm"></div>
       <div className="absolute top-14 right-44 w-24 h-8 bg-white/60 rounded-full blur-xs"></div>
 
-      {/* Mountain Backdrops */}
       <svg
         className="absolute bottom-16 w-full h-44 opacity-40 pointer-events-none"
         preserveAspectRatio="none"
@@ -86,12 +82,10 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
         />
       </svg>
 
-      {/* Rolling Foreground Hills */}
       <div className="absolute inset-x-0 bottom-0 h-28 bg-[#22C55E] rounded-t-[100%] scale-x-125 translate-y-6 shadow-inner"></div>
       <div className="absolute -inset-x-10 bottom-0 h-24 bg-[#16A34A] rounded-t-[90%] scale-x-110 translate-y-8"></div>
       <div className="absolute inset-x-0 bottom-0 h-16 bg-[#15803D] rounded-t-[80%] translate-y-6"></div>
 
-      {/* Render Trees Synchronized 1-to-1 */}
       {dynamicTrees.map((tree) => (
         <div
           key={tree.id}
@@ -103,7 +97,6 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
             zIndex: Math.round(tree.bottom * 2),
           }}
         >
-          {/* Animated Swaying Tree Group */}
           <div
             className="flex flex-col items-center origin-bottom transition-transform"
             style={{
@@ -111,7 +104,6 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
               animationDelay: `${tree.swayDelay}s`,
             }}
           >
-            {/* Fluffy Truffula Tuft Head */}
             <div className="relative -mb-3 z-20 group-hover:scale-110 transition-transform">
               <div
                 className="w-16 h-16 rounded-full shadow-lg relative flex items-center justify-center"
@@ -120,7 +112,6 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
                   boxShadow: `0 8px 25px ${tree.color.tuftGlow}88, inset 0 -4px 8px ${tree.color.ring}aa`,
                 }}
               >
-                {/* Fluff Texture Ring */}
                 <div
                   className="absolute inset-1 rounded-full border-2 border-dashed opacity-40"
                   style={{ borderColor: tree.color.ring }}
@@ -131,7 +122,6 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
                 ></div>
               </div>
 
-              {/* Extra Fluff Tufts */}
               <div
                 className="absolute -top-1 left-1 w-6 h-6 rounded-full"
                 style={{ backgroundColor: tree.color.tuft }}
@@ -150,7 +140,6 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
               ></div>
             </div>
 
-            {/* Striped Bar-ba-loot Truffula Trunk */}
             <svg
               width="18"
               height={tree.height}
@@ -178,13 +167,11 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
               />
             </svg>
 
-            {/* Grass Tuft at Base */}
             <div className="w-8 h-2.5 bg-[#14532D] rounded-full -mt-1.5 z-10 opacity-80"></div>
           </div>
         </div>
       ))}
 
-      {/* Floating Indicator Banner */}
       <div className="absolute top-4 left-4 z-30 bg-[#fff8f5]/90 backdrop-blur-md px-4 py-2 rounded-2xl border-2 border-[#ffdbc7] shadow-md flex items-center gap-2">
         <span className="w-3 h-3 rounded-full bg-[#10B981] animate-ping"></span>
         <span className="font-['Quicksand'] font-bold text-xs sm:text-sm text-[#311300]">

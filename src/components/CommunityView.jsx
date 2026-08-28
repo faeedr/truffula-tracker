@@ -6,7 +6,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
 
-  // Filter and search logic
   const filteredProjects = useMemo(() => {
     return projects
       .filter((p) => {
@@ -28,21 +27,16 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
 
   return (
     <div className="space-y-8 pb-16 animate-fadeIn">
-      {/* Panoramic Header with Smooth Vertical Fade */}
       <div className="relative w-full rounded-3xl overflow-hidden shadow-lg border-2 border-amber-200 bg-emerald-950">
-        {/* Background Panoramic Image */}
         <div className="relative h-64 sm:h-80 w-full overflow-hidden">
           <img
             src="/assets/truffula_valley.jpg"
-            alt="The Truffula Valley Panorama"
+            alt="The Truffula Valley"
             className="w-full h-full object-cover object-center scale-105"
           />
-
-          {/* Smooth Vertical Fade Mask */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-slate-900/40 to-[#fff8f5]"></div>
         </div>
 
-        {/* Header Overlay Text */}
         <div className="absolute bottom-6 left-6 right-6 sm:left-10 sm:right-10 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-2 bg-[#feb72f] text-[#281900] px-3 py-1 rounded-full text-xs font-['Quicksand'] font-bold shadow-md mb-2">
@@ -67,9 +61,7 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
         </div>
       </div>
 
-      {/* Search and Filters Bar */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 bg-white rounded-3xl border-2 border-[#ffdbc7] shadow-sm">
-        {/* Search Input */}
         <div className="relative w-full md:w-96">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7e5700]" />
           <input
@@ -81,7 +73,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
           />
         </div>
 
-        {/* Filter Pills */}
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start sm:justify-end">
           {[
             { id: 'all', label: 'All Projects' },
@@ -104,7 +95,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
         </div>
       </div>
 
-      {/* Project Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProjects.map((project) => (
           <div
@@ -112,7 +102,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
             className="bg-white rounded-3xl border-2 border-[#ffdbc7] shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden group"
           >
             <div>
-              {/* Photo Area with Truffula Badge */}
               <div className="relative aspect-16/10 overflow-hidden bg-slate-900">
                 <img
                   src={project.photoUrl}
@@ -121,13 +110,11 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
 
-                {/* Tree Badge Top Right */}
                 <div className="absolute top-3 right-3 bg-[#006c49] text-white text-xs font-['Quicksand'] font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1 border border-emerald-300">
                   <Sprout className="w-3.5 h-3.5" />
                   <span>+{project.treeCount} {project.treeCount === 1 ? 'Truffula' : 'Truffulas'}</span>
                 </div>
 
-                {/* Multi-Photo Count Badge */}
                 {project.allPhotos && project.allPhotos.length > 1 && (
                   <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 border border-white/30">
                     <ImageIcon className="w-3 h-3" />
@@ -135,14 +122,12 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
                   </div>
                 )}
 
-                {/* Date Tag Bottom Left */}
                 <div className="absolute bottom-2 left-3 flex items-center gap-1 text-white text-[11px] font-semibold">
                   <Calendar className="w-3 h-3 text-[#feb72f]" />
                   <span>{project.date}</span>
                 </div>
               </div>
 
-              {/* Card Body */}
               <div className="p-5 space-y-3">
                 <div>
                   <h3 className="font-['Quicksand'] font-bold text-lg text-[#311300] line-clamp-1 group-hover:text-[#006c49] transition-colors">
@@ -154,7 +139,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
                   </p>
                 </div>
 
-                {/* Member Tags */}
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {project.members.map((m, i) => (
                     <span
@@ -166,7 +150,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
                   ))}
                 </div>
 
-                {/* Notes */}
                 {project.notes && (
                   <p className="text-xs text-[#584143] italic bg-[#fff8f5] p-2.5 rounded-xl border border-[#ffdbc7] line-clamp-2">
                     "{project.notes}"
@@ -175,7 +158,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
               </div>
             </div>
 
-            {/* Card Footer: Impact Stat & Lorax Stamp */}
             <div className="px-5 py-3.5 bg-[#ffe3d3]/40 border-t border-[#ffdbc7] flex items-center justify-between">
               <div>
                 <p className="text-[10px] font-bold uppercase text-[#006c49]">Carbon Offset</p>
@@ -196,7 +178,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
           </div>
         ))}
 
-        {/* Call to Action Card: Add Yours */}
         <div
           onClick={() => setActiveTab('submit')}
           className="rounded-3xl border-3 border-dashed border-[#ff6584] hover:border-[#b0284b] bg-[#ff6584]/10 hover:bg-[#ff6584]/20 p-8 flex flex-col items-center justify-center text-center gap-4 cursor-pointer transition-all duration-300 group min-h-[320px]"
