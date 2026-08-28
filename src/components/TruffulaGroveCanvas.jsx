@@ -33,9 +33,10 @@ export default function TruffulaGroveCanvas({ treeCount, totalTrees }) {
     }
 
     const trees = [];
-    const step = 84 / (actualCount - 1);
+    const visualCount = Math.min(actualCount, 28);
+    const step = 84 / (visualCount - 1);
 
-    for (let i = 0; i < actualCount; i++) {
+    for (let i = 0; i < visualCount; i++) {
       const left = 8 + i * step;
       const height = 120 + ((i * 37) % 65);
       const bottom = 5 + ((i * 5) % 6);

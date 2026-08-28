@@ -326,7 +326,7 @@ export default function App() {
       )}
 
       <footer className="bg-[#ffe3d3] w-full rounded-t-[2.5rem] mt-8 py-5 px-6 border-t-2 border-[#006c49]/20 flex flex-col items-center text-center gap-1.5 shadow-inner relative z-20">
-        <div className="font-['Quicksand'] font-bold text-base sm:text-lg text-[#006c49] max-w-2xl leading-snug">
+        <div className="font-['Quicksand'] font-bold text-sm sm:text-base md:text-lg text-[#006c49] max-w-5xl leading-snug tracking-wide">
           "UNLESS someone like you cares a whole awful lot, nothing is going to get better. It's not."
         </div>
 
