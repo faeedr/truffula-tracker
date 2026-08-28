@@ -37,7 +37,7 @@ const compressImage = (file) => {
   });
 };
 
-export default function SubmitView({ onAddProject, setActiveTab, onOpenCertificate }) {
+export default function SubmitView({ onAddProject, onShowCelebration }) {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isAnimatingSeed, setIsAnimatingSeed] = useState(false);
 
@@ -49,8 +49,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
   const [photosList, setPhotosList] = useState([]);
   const [photoError, setPhotoError] = useState(false);
   const [memberError, setMemberError] = useState(false);
-  const [submittedProject, setSubmittedProject] = useState(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -160,8 +158,7 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
     };
 
     onAddProject(newProject);
-    setSubmittedProject(newProject);
-    setShowSuccessModal(true);
+    onShowCelebration(newProject);
     resetFormState();
 
     confetti({
@@ -170,11 +167,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
       origin: { y: 0.5 },
       colors: ['#ff6584', '#6ffbbe', '#feb72f', '#10B981', '#38BDF8'],
     });
-  };
-
-  const handleDismissModal = () => {
-    setShowSuccessModal(false);
-    setActiveTab('home');
   };
 
   return (
@@ -494,82 +486,6 @@ export default function SubmitView({ onAddProject, setActiveTab, onOpenCertifica
           </div>
         </div>
       </div>
-
-      {showSuccessModal && submittedProject && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-          <div className="relative bg-[#fff8f5] rounded-3xl border-4 border-[#feb72f] shadow-2xl p-6 sm:p-8 max-w-lg w-full text-center space-y-5">
-            <button
-              onClick={handleDismissModal}
-              className="absolute top-4 right-4 p-2 text-[#8c7073] hover:text-[#311300] rounded-full hover:bg-[#ffe3d3] transition-colors cursor-pointer"
-              title="Close and Return Home"
-            >
-              <span className="material-symbols-outlined">close</span>
-            </button>
-
-            <div className="relative w-28 h-28 mx-auto">
-              <div className="absolute inset-0 bg-[#feb72f]/40 rounded-full blur-xl animate-pulse"></div>
-              <img
-                src="/assets/lorax_standing_cutout.png"
-                alt="The Lorax Guardian"
-                className="w-full h-full object-contain relative z-10 scale-110"
-              />
-            </div>
-
-            <div className="space-y-1">
-              <span className="bg-[#feb72f]/20 text-[#7e5700] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-[#feb72f]">
-                🌱 The Guardian of the Forest Thanks You!
-              </span>
-              <h3 className="font-['Quicksand'] font-bold text-2xl text-[#311300] pt-2">
-                Project Successfully Logged!
-              </h3>
-              <p className="text-xs sm:text-sm text-[#584143]">
-                <strong>{submittedProject.groupName}</strong> planted{' '}
-                <span className="text-[#006c49] font-bold">+{submittedProject.treeCount} Truffula {submittedProject.treeCount === 1 ? 'Tree' : 'Trees'}</span> in{' '}
-                {submittedProject.location}.
-              </p>
-            </div>
-
-            <div className="bg-[#ffeadf] rounded-2xl p-3.5 border border-[#dfbfc2] grid grid-cols-2 gap-3 text-left">
-              <div>
-                <p className="text-[10px] font-bold text-[#7e5700] uppercase">CO₂ Sequestration</p>
-                <p className="font-['Quicksand'] font-bold text-sm text-[#006c49]">
-                  +{submittedProject.treeCount * CO2_PER_TREE_KG} kg / yr
-                </p>
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-[#7e5700] uppercase">Clean Oxygen</p>
-                <p className="font-['Quicksand'] font-bold text-sm text-[#00af79]">
-                  +{submittedProject.treeCount * 118} kg / yr
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-2 pt-1">
-              <button
-                onClick={() => {
-                  setShowSuccessModal(false);
-                  onOpenCertificate(submittedProject);
-                }}
-                className="w-full py-2.5 rounded-full font-['Quicksand'] font-bold text-xs text-[#6d4a00] bg-[#feb72f] hover:bg-[#ffba3a] border-b-2 border-[#D99A22] shadow-md flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-sm">military_tech</span>
-                <span>Download "Unless..." Forest Protector Certificate</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowSuccessModal(false);
-                  setActiveTab('community');
-                }}
-                className="w-full py-2.5 rounded-full font-['Quicksand'] font-bold text-xs text-[#311300] bg-[#ffe3d3] hover:bg-[#ffdbc7] flex items-center justify-center gap-2 transition-colors cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-sm">group</span>
-                <span>View in Community Forest</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

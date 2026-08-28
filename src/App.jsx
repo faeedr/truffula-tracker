@@ -7,7 +7,7 @@ import SubmitView from './components/SubmitView';
 import CommunityView from './components/CommunityView';
 import SDGImpactView from './components/SDGImpactView';
 import CertificateModal from './components/CertificateModal';
-import { INITIAL_PROJECTS, BASE_SEED_TREES } from './data/mockData';
+import { INITIAL_PROJECTS, BASE_SEED_TREES, CO2_PER_TREE_KG } from './data/mockData';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -24,6 +24,7 @@ export default function App() {
   });
 
   const [activeCertificate, setActiveCertificate] = useState(null);
+  const [celebrationProject, setCelebrationProject] = useState(null);
   
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetPasswordInput, setResetPasswordInput] = useState('');
@@ -33,7 +34,6 @@ export default function App() {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [activeTab]);
 
-  // Real-time Firestore sync with resilient local fallback
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, 'projects'),
@@ -45,7 +45,6 @@ export default function App() {
 
         cloudProjects.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-        // Sync state and localStorage
         setProjects(cloudProjects);
         try {
           localStorage.setItem('truffula_projects_v2', JSON.stringify(cloudProjects));
@@ -71,7 +70,6 @@ export default function App() {
       createdAt: Date.now(),
     };
 
-    // Update local state and localStorage instantly
     setProjects((prev) => {
       const updated = [projectWithTimestamp, ...prev];
       try {
@@ -82,12 +80,11 @@ export default function App() {
       return updated;
     });
 
-    // Sync to Cloud Firestore
     try {
       await setDoc(doc(db, 'projects', newProj.id), projectWithTimestamp);
-      console.log('Successfully synced to Firebase cloud:', newProj.id);
+      console.log('Synced to Firebase cloud:', newProj.id);
     } catch (err) {
-      console.error('Firebase save error (check Firestore Rules tab):', err);
+      console.error('Firebase save error:', err);
     }
   };
 
@@ -141,8 +138,7 @@ export default function App() {
         {activeTab === 'submit' && (
           <SubmitView
             onAddProject={handleAddProject}
-            setActiveTab={setActiveTab}
-            onOpenCertificate={setActiveCertificate}
+            onShowCelebration={setCelebrationProject}
           />
         )}
 
@@ -162,6 +158,87 @@ export default function App() {
         )}
       </main>
 
+      {/* Full-Screen Root Level Celebration Modal */}
+      {celebrationProject && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
+          <div className="relative bg-[#fff8f5] rounded-3xl border-4 border-[#feb72f] shadow-2xl p-6 sm:p-8 max-w-lg w-full text-center space-y-5">
+            <button
+              onClick={() => {
+                setCelebrationProject(null);
+                setActiveTab('home');
+              }}
+              className="absolute top-4 right-4 p-2 text-[#8c7073] hover:text-[#311300] rounded-full hover:bg-[#ffe3d3] transition-colors cursor-pointer"
+              title="Close and Return Home"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+
+            <div className="relative w-28 h-28 mx-auto">
+              <div className="absolute inset-0 bg-[#feb72f]/40 rounded-full blur-xl animate-pulse"></div>
+              <img
+                src="/assets/lorax_standing_cutout.png"
+                alt="The Lorax Guardian"
+                className="w-full h-full object-contain relative z-10 scale-110"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <span className="bg-[#feb72f]/20 text-[#7e5700] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-[#feb72f]">
+                🌱 The Guardian of the Forest Thanks You!
+              </span>
+              <h3 className="font-['Quicksand'] font-bold text-2xl text-[#311300] pt-2">
+                Project Successfully Logged!
+              </h3>
+              <p className="text-xs sm:text-sm text-[#584143]">
+                <strong>{celebrationProject.groupName}</strong> planted{' '}
+                <span className="text-[#006c49] font-bold">+{celebrationProject.treeCount} Truffula {celebrationProject.treeCount === 1 ? 'Tree' : 'Trees'}</span> in{' '}
+                {celebrationProject.location}.
+              </p>
+            </div>
+
+            <div className="bg-[#ffeadf] rounded-2xl p-3.5 border border-[#dfbfc2] grid grid-cols-2 gap-3 text-left">
+              <div>
+                <p className="text-[10px] font-bold text-[#7e5700] uppercase">CO₂ Sequestration</p>
+                <p className="font-['Quicksand'] font-bold text-sm text-[#006c49]">
+                  +{celebrationProject.treeCount * CO2_PER_TREE_KG} kg / yr
+                </p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-[#7e5700] uppercase">Clean Oxygen</p>
+                <p className="font-['Quicksand'] font-bold text-sm text-[#00af79]">
+                  +{celebrationProject.treeCount * 118} kg / yr
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2 pt-1">
+              <button
+                onClick={() => {
+                  const proj = celebrationProject;
+                  setCelebrationProject(null);
+                  setActiveCertificate(proj);
+                }}
+                className="w-full py-2.5 rounded-full font-['Quicksand'] font-bold text-xs text-[#6d4a00] bg-[#feb72f] hover:bg-[#ffba3a] border-b-2 border-[#D99A22] shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-sm">military_tech</span>
+                <span>Download "Unless..." Forest Protector Certificate</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setCelebrationProject(null);
+                  setActiveTab('community');
+                }}
+                className="w-full py-2.5 rounded-full font-['Quicksand'] font-bold text-xs text-[#311300] bg-[#ffe3d3] hover:bg-[#ffdbc7] flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-sm">group</span>
+                <span>View in Community Forest</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {activeCertificate && (
         <CertificateModal
           project={activeCertificate}
@@ -170,7 +247,7 @@ export default function App() {
       )}
 
       {showResetModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-[#fff8f5] rounded-3xl border-4 border-[#ff6584] shadow-2xl p-6 sm:p-8 max-w-md w-full text-center space-y-4">
             <div className="w-14 h-14 rounded-full bg-[#ff6584]/20 text-[#b0284b] flex items-center justify-center mx-auto">
               <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: '"FILL" 1' }}>
