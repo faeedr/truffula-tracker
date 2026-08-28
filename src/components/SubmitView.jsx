@@ -357,7 +357,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
                   maxLength={120}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder='e.g. "Unless someone like you cares a whole awful lot..."'
+                  placeholder="Planted with care to speak for the trees and restore clean air."
                   className="w-full rounded-xl border-2 border-[#8c7073]/20 bg-[#fff8f5] focus:border-[#ff6584] px-3.5 py-1.5 font-['Be_Vietnam_Pro'] text-xs text-[#311300] transition-all outline-none"
                 />
               </div>
