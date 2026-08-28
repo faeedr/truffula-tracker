@@ -10,8 +10,8 @@ const compressImage = (file) => {
       const img = new Image();
       img.src = event.target.result;
       img.onload = () => {
-        const maxWidth = 800;
-        const maxHeight = 600;
+        const maxWidth = 600;
+        const maxHeight = 450;
         let { width, height } = img;
 
         if (width > maxWidth || height > maxHeight) {
@@ -29,7 +29,7 @@ const compressImage = (file) => {
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/jpeg', 0.8));
+        resolve(canvas.toDataURL('image/jpeg', 0.65));
       };
       img.onerror = () => resolve(event.target.result);
     };
