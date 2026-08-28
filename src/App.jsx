@@ -23,7 +23,6 @@ export default function App() {
 
   const [activeCertificate, setActiveCertificate] = useState(null);
   
-  // Password Protection for Reset Demo
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetPasswordInput, setResetPasswordInput] = useState('');
   const [resetError, setResetError] = useState('');
@@ -50,9 +49,8 @@ export default function App() {
 
   const handleConfirmReset = (e) => {
     e.preventDefault();
-    // Default master passcodes: 'unless' or 'lorax' or 'admin'
     const trimmed = resetPasswordInput.trim().toLowerCase();
-    if (trimmed === 'unless' || trimmed === 'lorax' || trimmed === 'admin') {
+    if (trimmed === 'unless') {
       setProjects([]);
       try {
         localStorage.removeItem('truffula_projects_v2');
@@ -63,7 +61,7 @@ export default function App() {
       setResetPasswordInput('');
       setResetError('');
     } else {
-      setResetError('Incorrect passcode. Hint: "UNLESS"');
+      setResetError('Incorrect passcode.');
     }
   };
 
@@ -118,7 +116,6 @@ export default function App() {
         />
       )}
 
-      {/* Password-Protected Reset Demo Modal */}
       {showResetModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-[#fff8f5] rounded-3xl border-4 border-[#ff6584] shadow-2xl p-6 sm:p-8 max-w-md w-full text-center space-y-4">
@@ -147,7 +144,7 @@ export default function App() {
                     setResetPasswordInput(e.target.value);
                     setResetError('');
                   }}
-                  placeholder="Enter passcode (e.g. unless)"
+                  placeholder="Enter passcode"
                   className="w-full text-center tracking-widest font-mono text-sm py-2.5 px-4 rounded-xl border-2 border-[#dfbfc2] bg-white focus:border-[#ff6584] outline-none"
                 />
                 {resetError && (
