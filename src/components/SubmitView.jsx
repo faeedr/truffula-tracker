@@ -46,6 +46,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
   const [membersList, setMembersList] = useState([]);
   const [location, setLocation] = useState('');
   const [treeCount, setTreeCount] = useState(1);
+  const [notes, setNotes] = useState('');
   const [photosList, setPhotosList] = useState([]);
   const [photoError, setPhotoError] = useState(false);
   const [memberError, setMemberError] = useState(false);
@@ -58,6 +59,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
     setMembersList([]);
     setLocation('');
     setTreeCount(1);
+    setNotes('');
     setPhotosList([]);
     setPhotoError(false);
     setMemberError(false);
@@ -153,7 +155,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
       photoUrl: photosList[0] || '/assets/marshmallow_wonder.png',
       allPhotos: photosList,
       date: new Date().toISOString().split('T')[0],
-      notes: 'Planted with care to speak for the trees and restore clean air.',
+      notes: notes.trim() || 'Planted with care to speak for the trees and restore clean air.',
       verified: true,
     };
 
@@ -173,7 +175,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
     <div className="w-full max-w-6xl mx-auto animate-fadeIn">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         <div className="lg:col-span-5 flex flex-col">
-          <div className="bg-[#4A2E18] rounded-[2.5rem] p-6 sm:p-8 flex flex-col items-center justify-between text-center shadow-xl relative overflow-hidden group h-full min-h-[580px] lg:max-h-[640px] border-4 border-[#3A2211]">
+          <div className="bg-[#4A2E18] rounded-[2.5rem] p-6 sm:p-8 flex flex-col items-center justify-between text-center shadow-xl relative overflow-hidden group h-full min-h-[580px] lg:max-h-[660px] border-4 border-[#3A2211]">
             <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
 
             {isAnimatingSeed && (
@@ -241,7 +243,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
           )}
 
           <div
-            className={`bg-white/95 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-7 shadow-[0_12px_40px_rgba(176,40,75,0.08)] relative overflow-hidden h-full min-h-[580px] lg:max-h-[640px] flex flex-col justify-between border-2 border-[#ffdbc7] transition-all duration-700 ${
+            className={`bg-white/95 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-7 shadow-[0_12px_40px_rgba(176,40,75,0.08)] relative overflow-hidden h-full min-h-[580px] lg:max-h-[660px] flex flex-col justify-between border-2 border-[#ffdbc7] transition-all duration-700 ${
               !isUnlocked ? 'opacity-40 blur-sm pointer-events-none' : 'opacity-100 blur-none'
             }`}
           >
@@ -256,7 +258,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-3 flex-1 flex flex-col justify-between overflow-y-auto pr-1">
+            <form onSubmit={handleSubmit} className="space-y-2.5 flex-1 flex flex-col justify-between overflow-y-auto pr-1">
               <div>
                 <label className="block font-['Quicksand'] font-bold text-xs text-[#311300] mb-1">
                   Group / School Name <span className="text-rose-500">*</span>
@@ -343,7 +345,24 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
                 </div>
               </div>
 
-              <div className="bg-[#ffeadf] rounded-2xl p-2.5 sm:p-3 border border-[#dfbfc2] flex items-center justify-between">
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block font-['Quicksand'] font-bold text-xs text-[#311300]">
+                    Dedication Quote / Message <span className="text-[#8c7073] font-normal">(Optional)</span>
+                  </label>
+                  <span className="text-[10px] text-[#8c7073] font-semibold">{notes.length}/120</span>
+                </div>
+                <input
+                  type="text"
+                  maxLength={120}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder='e.g. "Unless someone like you cares a whole awful lot..."'
+                  className="w-full rounded-xl border-2 border-[#8c7073]/20 bg-[#fff8f5] focus:border-[#ff6584] px-3.5 py-1.5 font-['Be_Vietnam_Pro'] text-xs text-[#311300] transition-all outline-none"
+                />
+              </div>
+
+              <div className="bg-[#ffeadf] rounded-2xl p-2 sm:p-2.5 border border-[#dfbfc2] flex items-center justify-between">
                 <div>
                   <label className="block font-['Quicksand'] font-bold text-xs text-[#311300]">
                     Trees Planted <span className="text-rose-500">*</span>
@@ -402,7 +421,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
                 {photosList.length === 0 ? (
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className={`border-2 border-dashed rounded-2xl p-3 flex items-center justify-center gap-3 bg-[#fff8f5] hover:bg-[#fff1ea] transition-colors cursor-pointer group ${
+                    className={`border-2 border-dashed rounded-2xl p-2.5 flex items-center justify-center gap-3 bg-[#fff8f5] hover:bg-[#fff1ea] transition-colors cursor-pointer group ${
                       photoError ? 'border-rose-400 bg-rose-50/50' : 'border-[#dfbfc2]'
                     }`}
                   >
@@ -424,7 +443,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
                     {photosList.map((photo, index) => (
                       <div
                         key={index}
-                        className="relative w-20 h-16 rounded-xl overflow-hidden border-2 border-[#006c49] shrink-0 bg-slate-900 shadow-sm"
+                        className="relative w-16 h-14 rounded-xl overflow-hidden border-2 border-[#006c49] shrink-0 bg-slate-900 shadow-sm"
                       >
                         <img
                           src={photo}
@@ -448,11 +467,11 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="w-16 h-16 rounded-xl border-2 border-dashed border-[#dfbfc2] hover:border-[#ff6584] flex flex-col items-center justify-center text-[#ff6584] shrink-0 bg-[#fff8f5] hover:bg-[#fff1ea] transition-colors cursor-pointer"
+                      className="w-14 h-14 rounded-xl border-2 border-dashed border-[#dfbfc2] hover:border-[#ff6584] flex flex-col items-center justify-center text-[#ff6584] shrink-0 bg-[#fff8f5] hover:bg-[#fff1ea] transition-colors cursor-pointer"
                       title="Upload more photos"
                     >
-                      <span className="material-symbols-outlined text-lg">add</span>
-                      <span className="text-[9px] font-bold">More</span>
+                      <span className="material-symbols-outlined text-base">add</span>
+                      <span className="text-[8px] font-bold">More</span>
                     </button>
                   </div>
                 )}
@@ -475,7 +494,7 @@ export default function SubmitView({ onAddProject, onShowCelebration }) {
 
               <button
                 type="submit"
-                className="w-full bg-[#10B981] hover:bg-[#059669] text-white font-['Quicksand'] font-bold py-3 rounded-full border-b-4 border-[#059669] active:border-b-0 active:translate-y-1 transition-colors shadow-md flex justify-center items-center gap-2 text-sm mt-1 cursor-pointer"
+                className="w-full bg-[#10B981] hover:bg-[#059669] text-white font-['Quicksand'] font-bold py-2.5 rounded-full border-b-4 border-[#059669] active:border-b-0 active:translate-y-1 transition-colors shadow-md flex justify-center items-center gap-2 text-sm mt-1 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: '"FILL" 1' }}>
                   park

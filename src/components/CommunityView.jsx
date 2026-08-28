@@ -19,7 +19,7 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
           p.members.some((m) => m.toLowerCase().includes(searchTerm.toLowerCase()));
 
         if (!matchesSearch) return false;
-        if (activeFilter === 'large') return p.treeCount >= 25;
+        if (activeFilter === 'large') return p.treeCount >= 3;
         return true;
       })
       .sort((a, b) => {
@@ -103,7 +103,7 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
             { id: 'all', label: 'All Projects' },
             { id: 'most', label: '🌳 Most Trees' },
             { id: 'recent', label: '⚡ Most Recent' },
-            { id: 'large', label: '🏆 25+ Trees' },
+            { id: 'large', label: '🏆 3+ Trees' },
           ].map((tab) => (
             <button
               key={tab.id}

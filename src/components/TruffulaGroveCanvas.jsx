@@ -1,17 +1,15 @@
 import React, { useMemo } from 'react';
 
-export default function TruffulaGroveCanvas({ totalTrees }) {
-  const treeCount = Math.max(0, totalTrees);
-
+export default function TruffulaGroveCanvas({ treeCount = 0 }) {
   const truffulaColors = [
-    { tuft: '#FF6584', tuftGlow: '#FFA0B4', ring: '#D83A60' },
-    { tuft: '#FEB72F', tuftGlow: '#FED47D', ring: '#D99106' },
-    { tuft: '#A855F7', tuftGlow: '#C084FC', ring: '#7E22CE' },
-    { tuft: '#38BDF8', tuftGlow: '#7DD3FC', ring: '#0284C7' },
-    { tuft: '#FB7185', tuftGlow: '#FDA4AF', ring: '#E11D48' },
-    { tuft: '#4ADE80', tuftGlow: '#86EFAC', ring: '#16A34A' },
-    { tuft: '#F472B6', tuftGlow: '#F9A8D4', ring: '#DB2777' },
-    { tuft: '#FBBF24', tuftGlow: '#FDE68A', ring: '#D97706' },
+    { tuft: '#FF6584', tuftGlow: '#FF8DA6', ring: '#D8385E', name: 'Pink' },
+    { tuft: '#FEB72F', tuftGlow: '#FFD166', ring: '#D99A22', name: 'Yellow' },
+    { tuft: '#6FFBBE', tuftGlow: '#A7FCD6', ring: '#20C97E', name: 'Mint' },
+    { tuft: '#A855F7', tuftGlow: '#C084FC', ring: '#7E22CE', name: 'Purple' },
+    { tuft: '#38BDF8', tuftGlow: '#7DD3FC', ring: '#0284C7', name: 'Sky Blue' },
+    { tuft: '#F43F5E', tuftGlow: '#FB7185', ring: '#BE123C', name: 'Rose' },
+    { tuft: '#F59E0B', tuftGlow: '#FBBF24', ring: '#B45309', name: 'Amber' },
+    { tuft: '#10B981', tuftGlow: '#34D399', ring: '#047857', name: 'Emerald' },
   ];
 
   const dynamicTrees = useMemo(() => {
@@ -21,7 +19,7 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
         {
           id: 1,
           left: 50,
-          bottom: 22,
+          bottom: 7,
           height: 160,
           scale: 1.15,
           color: truffulaColors[0],
@@ -38,7 +36,7 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
     for (let i = 0; i < treeCount; i++) {
       const left = 8 + i * step;
       const height = 120 + ((i * 37) % 65);
-      const bottom = 14 + ((i * 23) % 18);
+      const bottom = 5 + ((i * 5) % 6);
       const scale = 0.85 + ((i * 17) % 35) / 100;
       const color = truffulaColors[i % truffulaColors.length];
       const swayDelay = (i * 0.4) % 3;
@@ -141,45 +139,48 @@ export default function TruffulaGroveCanvas({ totalTrees }) {
             </div>
 
             <svg
-              width="18"
+              width="24"
               height={tree.height}
-              viewBox={`0 0 18 ${tree.height}`}
-              className="z-10"
-              style={{ transform: `rotate(${tree.trunkAngle}deg)` }}
+              className="z-10 overflow-visible"
+              style={{
+                transform: `rotate(${tree.trunkAngle}deg)`,
+                transformOrigin: 'bottom center',
+              }}
             >
               <defs>
                 <pattern
                   id={`stripes-${tree.id}`}
-                  width="18"
-                  height="14"
+                  width="10"
+                  height="16"
                   patternUnits="userSpaceOnUse"
-                  patternTransform="rotate(15)"
+                  patternTransform="rotate(25)"
                 >
-                  <rect width="18" height="7" fill="#FEF08A" />
-                  <rect y="7" width="18" height="7" fill="#1F2937" />
+                  <line x1="0" y1="0" x2="0" y2="16" stroke="#2B2D42" strokeWidth="12" />
+                  <line x1="0" y1="0" x2="0" y2="16" stroke="#FDE047" strokeWidth="5" />
                 </pattern>
               </defs>
+
               <path
-                d={`M7,0 Q9,${tree.height / 2} 6,${tree.height} L12,${tree.height} Q11,${tree.height / 2} 11,0 Z`}
+                d={`M 9 0 Q ${12 + tree.trunkAngle} ${tree.height / 2} 9 ${tree.height} L 15 ${tree.height} Q ${18 + tree.trunkAngle} ${tree.height / 2} 15 0 Z`}
                 fill={`url(#stripes-${tree.id})`}
-                stroke="#1F2937"
+                stroke="#1E1B18"
                 strokeWidth="1.5"
               />
             </svg>
 
-            <div className="w-8 h-2.5 bg-[#14532D] rounded-full -mt-1.5 z-10 opacity-80"></div>
+            <div className="w-7 h-2 rounded-full bg-[#15803D] opacity-90 -mt-1 shadow-sm"></div>
           </div>
         </div>
       ))}
 
-      <div className="absolute top-4 left-4 z-30 bg-[#fff8f5]/90 backdrop-blur-md px-4 py-2 rounded-2xl border-2 border-[#ffdbc7] shadow-md flex items-center gap-2">
+      <div className="absolute top-4 left-4 z-30 bg-white/85 backdrop-blur-md px-4 py-2 rounded-2xl border-2 border-[#ffdbc7] shadow-lg flex items-center gap-2">
         <span className="w-3 h-3 rounded-full bg-[#10B981] animate-ping"></span>
         <span className="font-['Quicksand'] font-bold text-xs sm:text-sm text-[#311300]">
           {treeCount === 0
-            ? '🌱 Awaiting the First Seed to be Planted!'
+            ? 'The Truffula Valley Awaits Its First Seed...'
             : treeCount === 1
-            ? '🌱 1 Truffula Seed growing strong!'
-            : `🌳 ${treeCount} Truffula Trees Swaying in Harmony!`}
+            ? '🌱 1 Truffula Tree Sprouting in the Valley!'
+            : `🌲 ${treeCount} Truffula Trees Swaying in Harmony!`}
         </span>
       </div>
     </div>
