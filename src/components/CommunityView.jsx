@@ -1,14 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Search, MapPin, Sprout, Award, Calendar, Sparkles, Image as ImageIcon, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Search, MapPin, Sprout, Award, Calendar, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { CO2_PER_TREE_KG } from '../data/mockData';
 
-export default function CommunityView({ projects, setActiveTab, onOpenCertificate, totalTrees }) {
+export default function CommunityView({ projects, setActiveTab, onOpenCertificate, onOpenGallery, totalTrees }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
-
-  // Photo Gallery Lightbox state
-  const [galleryProject, setGalleryProject] = useState(null);
-  const [currentPhotoIdx, setCurrentPhotoIdx] = useState(0);
 
   const filteredProjects = useMemo(() => {
     return projects
@@ -28,27 +24,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
         return 0;
       });
   }, [projects, searchTerm, activeFilter]);
-
-  const handleOpenGallery = (project, initialIdx = 0) => {
-    setGalleryProject(project);
-    setCurrentPhotoIdx(initialIdx);
-  };
-
-  const handlePrevPhoto = (e) => {
-    e.stopPropagation();
-    if (!galleryProject?.allPhotos) return;
-    setCurrentPhotoIdx((prev) =>
-      prev === 0 ? galleryProject.allPhotos.length - 1 : prev - 1
-    );
-  };
-
-  const handleNextPhoto = (e) => {
-    e.stopPropagation();
-    if (!galleryProject?.allPhotos) return;
-    setCurrentPhotoIdx((prev) =>
-      prev === galleryProject.allPhotos.length - 1 ? 0 : prev + 1
-    );
-  };
 
   return (
     <div className="space-y-8 pb-16 animate-fadeIn">
@@ -131,7 +106,7 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
             <div>
               {/* Photo Area with Click to View Gallery */}
               <div
-                onClick={() => handleOpenGallery(project)}
+                onClick={() => onOpenGallery(project)}
                 className="relative aspect-16/10 overflow-hidden bg-[#ffe3d3] cursor-pointer"
                 title="Click to view all photo evidence"
               >
@@ -152,9 +127,9 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleOpenGallery(project);
+                      onOpenGallery(project);
                     }}
-                    className="absolute top-3 left-3 bg-black/70 hover:bg-[#b0284b] backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/30 transition-colors shadow-md"
+                    className="absolute top-3 left-3 bg-black/70 hover:bg-[#b0284b] backdrop-blur-sm text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-white/30 transition-colors shadow-md cursor-pointer"
                   >
                     <ImageIcon className="w-3.5 h-3.5" />
                     <span>View {project.allPhotos.length} Photos</span>
@@ -241,91 +216,6 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
           </button>
         </div>
       </div>
-
-      {/* Interactive Photo Evidence Gallery Modal */}
-      {galleryProject && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-          <div className="relative max-w-3xl w-full bg-[#fff8f5] rounded-3xl overflow-hidden border-4 border-[#ffdbc7] shadow-2xl flex flex-col">
-            {/* Modal Header */}
-            <div className="p-4 sm:p-5 bg-white border-b border-[#ffdbc7] flex items-center justify-between">
-              <div>
-                <h3 className="font-['Quicksand'] font-bold text-lg text-[#311300]">
-                  {galleryProject.groupName} — Planting Evidence
-                </h3>
-                <p className="text-xs text-[#584143] flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-[#7e5700]" />
-                  <span>{galleryProject.location}</span>
-                  <span className="mx-1">•</span>
-                  <span className="font-bold text-[#006c49]">+{galleryProject.treeCount} Trees</span>
-                </p>
-              </div>
-
-              <button
-                onClick={() => setGalleryProject(null)}
-                className="p-2 rounded-full text-slate-500 hover:text-slate-900 hover:bg-[#ffe3d3] transition-colors cursor-pointer"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            {/* Main Stage Image */}
-            <div className="relative aspect-16/10 bg-black flex items-center justify-center overflow-hidden">
-              <img
-                src={
-                  galleryProject.allPhotos && galleryProject.allPhotos.length > 0
-                    ? galleryProject.allPhotos[currentPhotoIdx]
-                    : galleryProject.photoUrl
-                }
-                alt="Planting evidence"
-                className="w-full h-full object-contain"
-              />
-
-              {/* Navigation Arrows (if multiple photos) */}
-              {galleryProject.allPhotos && galleryProject.allPhotos.length > 1 && (
-                <>
-                  <button
-                    onClick={handlePrevPhoto}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/60 hover:bg-[#b0284b] text-white transition-colors cursor-pointer shadow-lg"
-                  >
-                    <ChevronLeft className="w-6 h-6" />
-                  </button>
-
-                  <button
-                    onClick={handleNextPhoto}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-black/60 hover:bg-[#b0284b] text-white transition-colors cursor-pointer shadow-lg"
-                  >
-                    <ChevronRight className="w-6 h-6" />
-                  </button>
-
-                  {/* Photo Counter Pill */}
-                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20 backdrop-blur-sm">
-                    {currentPhotoIdx + 1} / {galleryProject.allPhotos.length}
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Thumbnails Carousel (if multiple photos) */}
-            {galleryProject.allPhotos && galleryProject.allPhotos.length > 1 && (
-              <div className="p-3 bg-white border-t border-[#ffdbc7] flex gap-2 overflow-x-auto justify-center">
-                {galleryProject.allPhotos.map((imgSrc, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentPhotoIdx(idx)}
-                    className={`w-16 h-12 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
-                      currentPhotoIdx === idx
-                        ? 'border-[#006c49] scale-105 shadow-md ring-2 ring-[#006c49]/30'
-                        : 'border-[#dfbfc2] opacity-60 hover:opacity-100'
-                    }`}
-                  >
-                    <img src={imgSrc} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
