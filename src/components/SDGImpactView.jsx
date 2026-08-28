@@ -102,6 +102,7 @@ export default function SDGImpactView({ setActiveTab }) {
         </div>
       </section>
 
+      {/* Impact Simulator */}
       <section className="w-full">
         <div className="bg-white rounded-3xl p-6 sm:p-10 md:p-12 shadow-[0_10px_40px_-10px_rgba(255,101,132,0.15)] flex flex-col gap-8 w-full border-2 border-[#ffdbc7]">
           <div className="text-center space-y-2">
@@ -114,46 +115,29 @@ export default function SDGImpactView({ setActiveTab }) {
             </p>
           </div>
 
-          <div className="flex flex-col gap-4 max-w-3xl mx-auto w-full">
+          <div className="flex flex-col gap-5 max-w-3xl mx-auto w-full">
             <div className="flex justify-between items-end">
               <label className="font-['Quicksand'] font-bold text-sm sm:text-base text-[#311300]">
                 Number of Trees to Plant (1 – 50)
               </label>
-              <span className="font-['Quicksand'] font-bold text-2xl text-[#ff6584]">
+              <span className="font-['Quicksand'] font-bold text-2xl sm:text-3xl text-[#006c49] bg-[#e6f7f0] px-4 py-1 rounded-2xl border border-[#b2e7d3]">
                 {sliderTrees} {sliderTrees === 1 ? 'Tree' : 'Trees'}
               </span>
             </div>
 
-            <div className="relative w-full h-8 flex items-center">
-              <div className="absolute w-full h-4 bg-[#ffdbc7] rounded-full overflow-hidden pointer-events-none">
-                <div
-                  className="h-full bg-gradient-to-r from-[#00af79] to-[#006c49] rounded-full"
-                  style={{ width: `${sliderPercent}%` }}
-                ></div>
-              </div>
-
+            {/* Seamless, Zero-Gap Native Range Slider */}
+            <div className="w-full py-2">
               <input
                 type="range"
                 min="1"
                 max="50"
                 value={sliderTrees}
                 onChange={(e) => setSliderTrees(Number(e.target.value))}
-                className="w-full h-6 opacity-0 z-20 cursor-pointer"
-              />
-
-              <div
-                className="absolute w-8 h-8 sm:w-9 sm:h-9 bg-white border-4 border-[#006c49] rounded-full shadow-md flex items-center justify-center pointer-events-none z-10"
                 style={{
-                  left: `calc(${sliderPercent}% - ${(sliderPercent / 100) * 32}px)`,
+                  background: `linear-gradient(to right, #006c49 0%, #00af79 ${sliderPercent}%, #ffdbc7 ${sliderPercent}%, #ffdbc7 100%)`,
                 }}
-              >
-                <span
-                  className="material-symbols-outlined text-[#006c49] text-sm sm:text-base leading-none"
-                  style={{ fontVariationSettings: '"FILL" 1' }}
-                >
-                  eco
-                </span>
-              </div>
+                className="truffula-slider"
+              />
             </div>
           </div>
 
