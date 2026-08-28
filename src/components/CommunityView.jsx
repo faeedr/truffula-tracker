@@ -52,11 +52,13 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
 
   return (
     <div className="space-y-8 pb-16 animate-fadeIn">
-      <div className="relative w-full rounded-3xl overflow-hidden shadow-lg border-2 border-amber-200 bg-emerald-950">
-        <div className="relative h-64 sm:h-80 w-full overflow-hidden">
+      <div className="relative w-full rounded-3xl overflow-hidden shadow-lg border-2 border-amber-200 bg-[#ffe3d3]">
+        <div className="relative h-64 sm:h-80 w-full overflow-hidden bg-[#ffe3d3]">
           <img
             src="/assets/truffula_valley.jpg"
             alt="The Truffula Valley"
+            loading="eager"
+            fetchPriority="high"
             className="w-full h-full object-cover object-center scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-slate-900/40 to-[#fff8f5]"></div>
@@ -130,12 +132,13 @@ export default function CommunityView({ projects, setActiveTab, onOpenCertificat
               {/* Photo Area with Click to View Gallery */}
               <div
                 onClick={() => handleOpenGallery(project)}
-                className="relative aspect-16/10 overflow-hidden bg-slate-900 cursor-pointer"
+                className="relative aspect-16/10 overflow-hidden bg-[#ffe3d3] cursor-pointer"
                 title="Click to view all photo evidence"
               >
                 <img
                   src={project.photoUrl}
                   alt={project.groupName}
+                  loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
