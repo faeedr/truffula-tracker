@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { collection, onSnapshot, doc, setDoc, deleteDoc, getDocs } from 'firebase/firestore';
+import { db } from './firebase';
 import Navbar from './components/Navbar';
 import HomeView from './components/HomeView';
 import SubmitView from './components/SubmitView';
@@ -32,22 +34,49 @@ export default function App() {
   }, [activeTab]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem('truffula_projects_v2', JSON.stringify(projects));
-    } catch (e) {
-      console.warn(e);
-    }
-  }, [projects]);
+    const unsubscribe = onSnapshot(
+      collection(db, 'projects'),
+      (snapshot) => {
+        const cloudProjects = [];
+        snapshot.forEach((doc) => {
+          cloudProjects.push({ id: doc.id, ...doc.data() });
+        });
+        cloudProjects.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        setProjects(cloudProjects);
+        try {
+          localStorage.setItem('truffula_projects_v2', JSON.stringify(cloudProjects));
+        } catch (err) {
+          console.warn(err);
+        }
+      },
+      (error) => {
+        console.warn('Firestore offline/sync error:', error);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
 
   const submittedTrees = projects.reduce((acc, p) => acc + (Number(p.treeCount) || 0), 0);
   const totalTrees = BASE_SEED_TREES + submittedTrees;
   const totalGroups = projects.length;
 
-  const handleAddProject = (newProj) => {
-    setProjects((prev) => [newProj, ...prev]);
+  const handleAddProject = async (newProj) => {
+    const projectWithTimestamp = {
+      ...newProj,
+      createdAt: Date.now(),
+    };
+
+    setProjects((prev) => [projectWithTimestamp, ...prev]);
+
+    try {
+      await setDoc(doc(db, 'projects', newProj.id), projectWithTimestamp);
+    } catch (err) {
+      console.error('Error saving to cloud database:', err);
+    }
   };
 
-  const handleConfirmReset = (e) => {
+  const handleConfirmReset = async (e) => {
     e.preventDefault();
     const trimmed = resetPasswordInput.trim().toLowerCase();
     if (trimmed === 'unless') {
@@ -57,6 +86,15 @@ export default function App() {
       } catch (err) {
         console.error(err);
       }
+
+      try {
+        const querySnapshot = await getDocs(collection(db, 'projects'));
+        const deletePromises = querySnapshot.docs.map((d) => deleteDoc(d.ref));
+        await Promise.all(deletePromises);
+      } catch (err) {
+        console.error('Error clearing cloud database:', err);
+      }
+
       setShowResetModal(false);
       setResetPasswordInput('');
       setResetError('');
