@@ -67,17 +67,13 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
 
   return (
     <div className="w-full flex flex-col gap-10 pb-16 animate-fadeIn">
-      <section className="relative overflow-hidden rounded-[2.5rem] p-6 sm:p-12 md:p-16 flex flex-col items-start justify-center min-h-[460px] border-4 border-[#ffdbc7] shadow-xl">
+      <section className="relative rounded-3xl overflow-hidden mt-2 flex items-center justify-start p-6 sm:p-10 md:p-14 lorax-shadow min-h-[560px] md:min-h-[600px] border-2 border-[#ff6584]/20">
+        <div className="absolute inset-0 bg-black/15 z-10"></div>
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center md:bg-top"
           style={{
-            backgroundImage: "url('/assets/stitch_hero_bg.jpg')",
-          }}
-        ></div>
-        <div
-          className="absolute inset-0"
-          style={{
-            background: 'linear-gradient(to right, rgba(255, 248, 245, 0.95) 0%, rgba(255, 248, 245, 0.75) 45%, rgba(255, 248, 245, 0.1) 100%)',
+            backgroundImage: 'url(/assets/stitch_hero_bg.jpg)',
+            opacity: 0.95,
           }}
         ></div>
 
