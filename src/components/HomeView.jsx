@@ -79,19 +79,19 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
         ></div>
 
         <div className="relative z-20 w-full max-w-5xl flex flex-col md:flex-row items-center gap-12">
-          <div className="flex-1 max-w-xl text-left bg-[#fff8f5]/40 backdrop-blur-xl p-8 md:p-12 rounded-[2rem] border-4 border-[#ffdbc7] shadow-2xl card-pop">
+          <div className="flex-1 max-w-xl lg:max-w-2xl text-left bg-[#fff8f5]/40 backdrop-blur-xl p-8 md:p-12 rounded-[2rem] border-4 border-[#ffdbc7] shadow-2xl card-pop">
             <h1 className="font-['Quicksand'] font-bold text-3xl sm:text-4xl md:text-5xl text-[#311300] mb-6 drop-shadow-sm leading-tight">
               Speak for the Trees. Take Action for Climate.
             </h1>
             <p className="font-['Be_Vietnam_Pro'] text-base sm:text-lg text-[#584143] mb-10 leading-relaxed font-medium">
               Track every seed planted, restore the forest, and combat global warming in real-time.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-start">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 justify-start">
               <button
                 onClick={() => setActiveTab('submit')}
-                className="bg-[#ff6584] text-[#6a0024] font-['Quicksand'] font-bold text-base px-8 py-4 rounded-full flex items-center justify-center gap-2 hover:brightness-110 transition-all chunky-btn-shadow cursor-pointer hover:scale-105 active:scale-95"
+                className="bg-[#ff6584] text-[#6a0024] font-['Quicksand'] font-bold text-sm sm:text-base px-6 py-3.5 sm:px-7 sm:py-4 rounded-full flex items-center justify-center gap-2.5 hover:brightness-110 transition-all chunky-btn-shadow cursor-pointer hover:scale-105 active:scale-95 whitespace-nowrap shrink-0 shadow-md"
               >
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>
+                <span className="material-symbols-outlined text-xl sm:text-2xl leading-none" style={{ fontVariationSettings: '"FILL" 1' }}>
                   potted_plant
                 </span>
                 <span>Start Planting Today</span>
@@ -99,9 +99,11 @@ export default function HomeView({ setActiveTab, totalTrees, totalGroups }) {
 
               <button
                 onClick={() => setActiveTab('community')}
-                className="border-2 border-[#b0284b] text-[#b0284b] font-['Quicksand'] font-bold text-base px-8 py-4 rounded-full hover:bg-[#b0284b] hover:text-white transition-all bg-[#fff8f5]/50 backdrop-blur-sm cursor-pointer hover:scale-105 active:scale-95 flex items-center justify-center gap-1.5"
+                className="border-2 border-[#b0284b] text-[#b0284b] font-['Quicksand'] font-bold text-sm sm:text-base px-6 py-3.5 sm:px-7 sm:py-4 rounded-full hover:bg-[#b0284b] hover:text-white transition-all bg-[#fff8f5]/60 backdrop-blur-sm cursor-pointer hover:scale-105 active:scale-95 flex items-center justify-center gap-2.5 whitespace-nowrap shrink-0 shadow-sm"
               >
-                <span className="material-symbols-outlined text-lg">forest</span>
+                <span className="material-symbols-outlined text-xl sm:text-2xl leading-none" style={{ fontVariationSettings: '"FILL" 1' }}>
+                  forest
+                </span>
                 <span>View Community Forest</span>
               </button>
             </div>
