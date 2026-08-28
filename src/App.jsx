@@ -33,6 +33,7 @@ export default function App() {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [activeTab]);
 
+  // Real-time Firestore sync with resilient local fallback
   useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, 'projects'),
@@ -41,16 +42,19 @@ export default function App() {
         snapshot.forEach((doc) => {
           cloudProjects.push({ id: doc.id, ...doc.data() });
         });
+
         cloudProjects.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+        // Sync state and localStorage
         setProjects(cloudProjects);
         try {
           localStorage.setItem('truffula_projects_v2', JSON.stringify(cloudProjects));
         } catch (err) {
-          console.warn(err);
+          console.warn('Storage quota limit', err);
         }
       },
       (error) => {
-        console.warn('Firestore offline/sync error:', error);
+        console.warn('Firestore sync note:', error.message);
       }
     );
 
@@ -67,12 +71,23 @@ export default function App() {
       createdAt: Date.now(),
     };
 
-    setProjects((prev) => [projectWithTimestamp, ...prev]);
+    // Update local state and localStorage instantly
+    setProjects((prev) => {
+      const updated = [projectWithTimestamp, ...prev];
+      try {
+        localStorage.setItem('truffula_projects_v2', JSON.stringify(updated));
+      } catch (e) {
+        console.warn(e);
+      }
+      return updated;
+    });
 
+    // Sync to Cloud Firestore
     try {
       await setDoc(doc(db, 'projects', newProj.id), projectWithTimestamp);
+      console.log('Successfully synced to Firebase cloud:', newProj.id);
     } catch (err) {
-      console.error('Error saving to cloud database:', err);
+      console.error('Firebase save error (check Firestore Rules tab):', err);
     }
   };
 
